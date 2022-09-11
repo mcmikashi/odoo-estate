@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+  db-test:
+    image: postgres:alpine
+    env_file:
+      - db.env
+  odoo-test:
+    image: odoo:15.0
+    depends_on:
+      - db-test
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons
+    env_file:
+      - odoo.test.env
+    command: odoo -d odoo_test -i estate --test-enable --log-level=test 
