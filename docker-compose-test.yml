@@ -14,4 +14,4 @@ services:
       - ./addons:/mnt/extra-addons
     env_file:
       - odoo.test.env
-    command: odoo -d odoo_test -i estate --test-enable --log-level=test 
+    command: odoo -d odoo_test --test-tags /estate
