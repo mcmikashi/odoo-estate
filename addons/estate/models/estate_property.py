@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-
+from odoo.exceptions import UserError
 
 class Estate(models.Model):
     _name = "estate.property"
@@ -64,3 +64,17 @@ class Estate(models.Model):
         else:
             self.garden_area = 0
             self.garden_orientation = ''
+    
+    def action_sell(self):
+        for record in self:
+            if record.state == "cancel":
+                raise UserError("You can't sell a property that is already canceled.")
+            if not any(offer.status == 'accepted' for offer in record.offer_ids):
+                raise UserError("You can't sell a property that doesn't have an accepted offer.")
+        return self.write({"state": "sold"})
+    
+    def action_cancel(self):
+        for record in self:
+            if record.state == "sold":
+                raise UserError("You can't cancel a property that is already sold.")
+        return self.write({"state": "canceled"})
