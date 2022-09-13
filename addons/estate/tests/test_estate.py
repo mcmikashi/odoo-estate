@@ -58,7 +58,7 @@ class EstateTestCase(TransactionCase):
             date.today() + relativedelta(months=3)
         )
 
-    def test_add_properties_type(self):
+    def test_add_properties_tags(self):
         """Test that the properties tags are correctly created."""
         self.assertRecordValues(self.properties_tags_0,[self.vals_tags_0])
 
@@ -70,10 +70,19 @@ class EstateTestCase(TransactionCase):
         """Test that the properties are correctly created."""
         default_date_availability = date.today() + relativedelta(months=3)
         default_values = {'bedrooms':2, 'date_availability':default_date_availability,'active':True,'state':'new'}
+        computed_values = {
+            'total_area': self.property_vals_0['living_area'] + self.property_vals_0['garden_area'],
+            'best_offer_price':self.offer_vals_0["price"]
+        }
         self.assertRecordValues(self.properties_0,[
-            {**self.property_vals_0, ** default_values}
+            {**self.property_vals_0, **default_values, **computed_values}
         ])
     
     def test_add_properties_offers(self):
         """Test that the properties tags are correctly created."""
-        self.assertRecordValues(self.estate_offer_0,[self.offer_vals_0])
+        default_date_dead_line = date.today() + relativedelta(days=7)
+        default_values = {'validity':7}
+        computed_values = {'date_deadline':default_date_dead_line}
+        self.assertRecordValues(self.estate_offer_0,[
+            {**self.offer_vals_0, **default_values, **computed_values}
+        ])
