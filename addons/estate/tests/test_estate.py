@@ -21,8 +21,11 @@ class EstateTestCase(TransactionCase):
         cls.properties_tags_0 = cls.env['estate.property.tags'].create([cls.vals_tags_0])
 
         cls.vals_type_0 = {'name':'villa'}
-
         cls.properties_type_0 = cls.env['estate.property.type'].create([cls.vals_type_0])
+        
+        cls.vals_buyer = {'name': 'Dupont Dupont'}
+        cls.buyer = cls.env['res.partner'].create(cls.vals_buyer)
+
         cls.property_vals_0 = {
             'name':'The Coach House',
             'description': 'A house that is situated above a row of garages or carports.',
@@ -39,6 +42,14 @@ class EstateTestCase(TransactionCase):
             'tag_ids': [cls.properties_tags_0.id],
         }
         cls.properties_0 = cls.env['estate.property'].create([cls.property_vals_0])
+
+        cls.offer_vals_0 = {
+            "property_id":cls.properties_0.id,
+            "price":1800000,
+            "partner_id":cls.buyer.id,
+            "status":'accepted',
+        }
+        cls.estate_offer_0 = cls.env['estate.property.offer'].create(cls.offer_vals_0)
 
     def test_default_date_availability(self):
         """Test that the method class _default_date_availability return the good value"""
@@ -62,3 +73,7 @@ class EstateTestCase(TransactionCase):
         self.assertRecordValues(self.properties_0,[
             {**self.property_vals_0, ** default_values}
         ])
+    
+    def test_add_properties_offers(self):
+        """Test that the properties tags are correctly created."""
+        self.assertRecordValues(self.estate_offer_0,[self.offer_vals_0])
