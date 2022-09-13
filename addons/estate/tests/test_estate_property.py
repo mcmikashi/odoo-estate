@@ -17,10 +17,12 @@ class EstateTestCase(TransactionCase):
         # create the data for each tests. By doing it in the setUpClass instead
         # of in a setUp or in each test case, we reduce the testing time and
         # the duplication of code.
+        cls.vals_tags_0 = {'name':'cozy'}
+        cls.properties_tags_0 = cls.env['estate.property.tags'].create([cls.vals_tags_0])
 
         cls.vals_type_0 = {'name':'villa'}
-        cls.properties_type_0 = cls.env['estate.property.type'].create([cls.vals_type_0])
 
+        cls.properties_type_0 = cls.env['estate.property.type'].create([cls.vals_type_0])
         cls.property_vals_0 = {
             'name':'The Coach House',
             'description': 'A house that is situated above a row of garages or carports.',
@@ -34,6 +36,7 @@ class EstateTestCase(TransactionCase):
             'garden_area' : 500,
             'garden_orientation' : 'north',
             'property_type_id':cls.properties_type_0.id,
+            'tag_ids': [cls.properties_tags_0.id],
         }
         cls.properties_0 = cls.env['estate.property'].create([cls.property_vals_0])
 
@@ -43,6 +46,10 @@ class EstateTestCase(TransactionCase):
             self.properties_0._default_date_availability(),
             date.today() + relativedelta(months=3)
         )
+
+    def test_add_properties_type(self):
+        """Test that the properties tags are correctly created."""
+        self.assertRecordValues(self.properties_tags_0,[self.vals_tags_0])
 
     def test_add_properties_type(self):
         """Test that the properties type are correctly created."""
