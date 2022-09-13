@@ -6,6 +6,10 @@
                 id="estate_property_type_menu"
                 name="Type"
                 action="estate_property_type"/>
+            <menuitem
+                id="estate_property_tags_menu"
+                name="Tags"
+                action="estate_property_tags"/>
         </menuitem>
     </menuitem>
 </odoo>
