@@ -1,8 +1,9 @@
 from odoo.tests.common import TransactionCase
-#from odoo.exceptions import UserError
 from odoo.tests import tagged
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
+from odoo.tests.common import Form
 
 
 # The CI will run these tests after all the modules are installed,
@@ -31,7 +32,6 @@ class EstateTestCase(TransactionCase):
             'description': 'A house that is situated above a row of garages or carports.',
             'postcode': '97300',
             'expected_price':1500000,
-            'selling_price' :1800000,
             'living_area' :250,
             'facades' : 6,
             'garage' :True,
@@ -43,6 +43,26 @@ class EstateTestCase(TransactionCase):
         }
         cls.properties_0 = cls.env['estate.property'].create([cls.property_vals_0])
 
+        cls.property_vals_1 = {
+            'name':'The Coach House 1',
+            'expected_price':5000000,
+        }
+        cls.properties_1 = cls.env['estate.property'].create([cls.property_vals_1])
+
+        cls.property_vals_2 = {
+            'name':'The Coach House 2',
+            'expected_price':5000000,
+            'state':'canceled',
+        }
+        cls.properties_2 = cls.env['estate.property'].create([cls.property_vals_2])
+    
+        cls.property_vals_3 = {
+            'name':'The Coach House 3',
+            'expected_price':5000000,
+            'state':'sold',
+        }
+        cls.properties_3 = cls.env['estate.property'].create([cls.property_vals_3])
+
         cls.offer_vals_0 = {
             "property_id":cls.properties_0.id,
             "price":1800000,
@@ -50,6 +70,13 @@ class EstateTestCase(TransactionCase):
             "status":'accepted',
         }
         cls.estate_offer_0 = cls.env['estate.property.offer'].create(cls.offer_vals_0)
+
+        cls.offer_vals_1 = {
+            "property_id":cls.properties_0.id,
+            "price":1250000,
+            "partner_id":cls.buyer.id,
+        }
+        cls.estate_offer_1 = cls.env['estate.property.offer'].create(cls.offer_vals_1)
 
     def test_default_date_availability(self):
         """Test that the method class _default_date_availability return the good value"""
@@ -86,3 +113,45 @@ class EstateTestCase(TransactionCase):
         self.assertRecordValues(self.estate_offer_0,[
             {**self.offer_vals_0, **default_values, **computed_values}
         ])
+
+    def test_action_sell_properties(self):
+        # test a property with acepted offer and default state
+        self.properties_0.action_sell()
+        self.assertRecordValues(self.properties_0,[{'state':'sold'}])
+
+        with self.assertRaises(UserError):
+            # test action sell with no accepted offer for the proterty
+            self.properties_1.action_sell()
+        
+        with self.assertRaises(UserError):
+            # test action sell the proterty what is cancel
+            self.properties_2.action_sell()
+    
+    def test_action_cancel_properties(self):
+        # test a property that have a default state
+        self.properties_0.action_cancel()
+        self.assertRecordValues(self.properties_0,[{'state':'canceled'}])
+        with self.assertRaises(UserError):
+            # test action cancel with solded property
+            self.properties_3.action_cancel()
+    def test_action_accept_offer(self):
+        self.assertFalse(self.estate_offer_1.status)
+        self.estate_offer_1.action_accept_offer()
+        self.assertRecordValues(self.estate_offer_1,[{'status':'accepted'}])
+
+    def test_action_refuse_offer(self):
+        self.assertFalse(self.estate_offer_1.status)
+        self.estate_offer_1.action_refuse_offer()
+        self.assertRecordValues(self.estate_offer_1,[{'status':'refused'}])
+
+    def test_form_property(self):
+        """Test the onchange function of the estate property form"""
+        with Form(self.properties_1) as prop:
+            self.assertEqual(prop.garden_area, 0)
+            self.assertFalse(prop.garden_orientation)
+            prop.garden = True
+            self.assertEqual(prop.garden_area, 10)
+            self.assertEqual(prop.garden_orientation, "north")
+            prop.garden = False
+            self.assertEqual(prop.garden_area, 0)
+            self.assertFalse(prop.garden_orientation)
