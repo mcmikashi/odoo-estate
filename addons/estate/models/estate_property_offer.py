@@ -30,3 +30,12 @@ class EstatePropertyType(models.Model):
             if fields.Date.add(record.create_date + record.validity) != record.date_deadline:
                 validity = record.date_deadline - record.create_date 
                 record.validity = validity.days
+    
+    def action_accept_offer(self):
+        for record in self:
+            record.status = "accepted"
+    
+    def action_refuse_offer(self):
+        for record in self:
+            record.status = "refused"
+                
