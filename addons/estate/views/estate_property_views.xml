@@ -13,13 +13,13 @@
         <tree>
             <field name="name" string="Title"/>
             <field name="property_type_id" />
+            <field name="tag_ids" widget="many2many_tags"/>
             <field name="postcode"/>
             <field name="bedrooms"/>
             <field name="living_area"/>
             <field name="expected_price"/>
             <field name="selling_price"/>
             <field name="date_availability"/>
-            <field name="tag_ids" widget="many2many_tags"/>
         </tree>
     </field>
   </record>
@@ -33,6 +33,7 @@
           <header>
             <button name="action_sell" type="object" string="Sell"/>
             <button name="action_cancel" type="object" string="Cancel"/>
+            <field name="state" widget="statusbar" statusbar_visible="new,offer received,offer accepted,sold"/>
           </header>
           <sheet>
               <h1 class="mb32">
