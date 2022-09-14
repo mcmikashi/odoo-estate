@@ -64,14 +64,14 @@
                       <field name="facades"/>
                       <field name="garage" />
                       <field name="garden"/>
-                      <field name="garden_area"/>
-                      <field name="garden_orientation"/>
+                      <field name="garden_area" attrs="{'invisible': [('garden', '=', False)]}"/>
+                      <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}"/>
                       <field name="total_area" />
                     </group>
                   </page>
                   <page string="Offers">
                     <group>
-                      <field name="offer_ids" />
+                      <field name="offer_ids" attrs="{'readonly': [('state', 'in', ('offer accepted','sold','canceled'))]}"/>
                     </group>
                   </page>
                   <page string="Other info">
