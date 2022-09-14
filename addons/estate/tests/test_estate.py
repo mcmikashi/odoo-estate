@@ -67,7 +67,6 @@ class EstateTestCase(TransactionCase):
             "property_id":cls.properties_0.id,
             "price":1800000,
             "partner_id":cls.buyer.id,
-            "status":'accepted',
         }
         cls.estate_offer_0 = cls.env['estate.property.offer'].create(cls.offer_vals_0)
 
@@ -116,6 +115,7 @@ class EstateTestCase(TransactionCase):
 
     def test_action_sell_properties(self):
         # test a property with acepted offer and default state
+        self.estate_offer_0.state = 'accepted'
         self.properties_0.action_sell()
         self.assertRecordValues(self.properties_0,[{'state':'sold'}])
 
@@ -135,14 +135,21 @@ class EstateTestCase(TransactionCase):
             # test action cancel with solded property
             self.properties_3.action_cancel()
     def test_action_accept_offer(self):
-        self.assertFalse(self.estate_offer_1.status)
+        self.assertFalse(self.estate_offer_1.state)
         self.estate_offer_1.action_accept_offer()
-        self.assertRecordValues(self.estate_offer_1,[{'status':'accepted'}])
+        self.assertRecordValues(self.estate_offer_1,[{'state':'accepted'}])
+        self.assertRecordValues(self.properties_0,[
+            {'selling_price':self.offer_vals_1["price"],
+             'buyer_id':self.offer_vals_1["partner_id"],
+             'state':'offer accepted'}])
+        with self.assertRaises(UserError):
+            # test action when an offer is already accepted
+            self.estate_offer_0.action_accept_offer()
 
     def test_action_refuse_offer(self):
-        self.assertFalse(self.estate_offer_1.status)
+        self.assertFalse(self.estate_offer_1.state)
         self.estate_offer_1.action_refuse_offer()
-        self.assertRecordValues(self.estate_offer_1,[{'status':'refused'}])
+        self.assertRecordValues(self.estate_offer_1,[{'state':'refused'}])
 
     def test_form_property(self):
         """Test the onchange function of the estate property form"""
