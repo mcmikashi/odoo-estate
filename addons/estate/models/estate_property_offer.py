@@ -8,6 +8,11 @@ class EstatePropertyType(models.Model):
     _name = "estate.property.offer"
     _description = "Real estate property type"
 
+    _sql_constraints = [
+        ('check_price', 'CHECK(price >= 0)',
+         'An offer price must be strictly positive.'),
+    ]
+
     price = fields.Float()
     state = fields.Selection(
         selection=[('accepted', 'Accepted'), ('refused', 'Refused')],
@@ -46,3 +51,4 @@ class EstatePropertyType(models.Model):
     def action_refuse_offer(self):
             return self.write({'state':'refused'})
                 
+    

@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_compare, float_is_zero
+
 
 class Estate(models.Model):
     _name = "estate.property"
     _description = "Real Estate Property"
-
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK(expected_price > 0)',
+         'A property expected price must be strictly positive.'),
+        ('check_selling_price', 'CHECK(selling_price >= 0)',
+         'A property selling price must be positive.')
+    ]
     def _default_date_availability(self):
         return fields.Date.add(fields.Date.today(), months=3)
 
@@ -64,6 +71,13 @@ class Estate(models.Model):
         else:
             self.garden_area = 0
             self.garden_orientation = ''
+    
+    @api.constrains('expected_price','selling_price')
+    def _check_price(self):
+        for record in self:
+            lowest_accepted_price = record.expected_price * 0.90
+            if not float_is_zero(record.selling_price, precision_digits=2) and float_compare(record.selling_price,lowest_accepted_price, precision_digits=2) == -1:
+                raise ValidationError("The selling price cannot be lower than 90% of the expected price.")
     
     def action_sell(self):
         for record in self:
