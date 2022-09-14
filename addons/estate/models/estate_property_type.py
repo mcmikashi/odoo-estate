@@ -6,6 +6,7 @@ from odoo import models, fields
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
     _description = "Real estate property type"
+    _order = "name"
 
     _sql_constraints = [
         ("check_name", "UNIQUE(name)", "The name must be unique"),
