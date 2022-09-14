@@ -15,7 +15,7 @@
             <field name="partner_id" />
             <button name="action_accept_offer" type="object" icon="fa-check" />
             <button name="action_refuse_offer" type="object" icon="fa-times" />
-            <field name="status"/>
+            <field name="state"/>
         </tree>
     </field>
   </record>
@@ -28,7 +28,7 @@
           <sheet>
             <field name="price"/>
             <field name="partner_id" />
-            <field name="status"/>
+            <field name="state"/>
           </sheet>
         </form>
     </field>

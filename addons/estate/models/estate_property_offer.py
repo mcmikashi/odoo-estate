@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class EstatePropertyType(models.Model):
@@ -8,7 +9,7 @@ class EstatePropertyType(models.Model):
     _description = "Real estate property type"
 
     price = fields.Float()
-    status = fields.Selection(
+    state = fields.Selection(
         selection=[('accepted', 'Accepted'), ('refused', 'Refused')],
         copy=False,
     )
@@ -32,10 +33,16 @@ class EstatePropertyType(models.Model):
                 record.validity = validity.days
     
     def action_accept_offer(self):
-        for record in self:
-            record.status = "accepted"
+            if "accepted" in self.mapped("property_id.offer_ids.state"):
+                raise UserError("An offer is already accepted.")
+            else:
+                self.state = "accepted"
+                return self.property_id.write({
+                    'selling_price':self.price,
+                    'buyer_id':self.partner_id,
+                    'state':'offer accepted',
+                    })
     
     def action_refuse_offer(self):
-        for record in self:
-            record.status = "refused"
+            return self.write({'state':'refused'})
                 

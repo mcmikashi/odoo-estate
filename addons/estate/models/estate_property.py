@@ -69,7 +69,7 @@ class Estate(models.Model):
         for record in self:
             if record.state == "cancel":
                 raise UserError("You can't sell a property that is already canceled.")
-            if not any(offer.status == 'accepted' for offer in record.offer_ids):
+            if not any(offer.state == 'accepted' for offer in record.offer_ids):
                 raise UserError("You can't sell a property that doesn't have an accepted offer.")
         return self.write({"state": "sold"})
     
