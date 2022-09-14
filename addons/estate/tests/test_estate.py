@@ -2,7 +2,7 @@ from odoo.tests.common import TransactionCase
 from odoo.tests import tagged
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import Form
 
 
@@ -31,7 +31,7 @@ class EstateTestCase(TransactionCase):
             'name':'The Coach House',
             'description': 'A house that is situated above a row of garages or carports.',
             'postcode': '97300',
-            'expected_price':1500000,
+            'expected_price':150000,
             'living_area' :250,
             'facades' : 6,
             'garage' :True,
@@ -65,18 +65,25 @@ class EstateTestCase(TransactionCase):
 
         cls.offer_vals_0 = {
             "property_id":cls.properties_0.id,
-            "price":1800000,
+            "price":150000,
             "partner_id":cls.buyer.id,
         }
         cls.estate_offer_0 = cls.env['estate.property.offer'].create(cls.offer_vals_0)
 
         cls.offer_vals_1 = {
             "property_id":cls.properties_0.id,
-            "price":1250000,
+            "price":195000,
             "partner_id":cls.buyer.id,
         }
         cls.estate_offer_1 = cls.env['estate.property.offer'].create(cls.offer_vals_1)
 
+        cls.offer_vals_2 = {
+            "property_id":cls.properties_0.id,
+            "price":50000,
+            "partner_id":cls.buyer.id,
+            }
+        cls.estate_offer_2 = cls.env['estate.property.offer'].create(cls.offer_vals_2 )
+    
     def test_default_date_availability(self):
         """Test that the method class _default_date_availability return the good value"""
         self.assertEqual(
@@ -98,7 +105,7 @@ class EstateTestCase(TransactionCase):
         default_values = {'bedrooms':2, 'date_availability':default_date_availability,'active':True,'state':'new'}
         computed_values = {
             'total_area': self.property_vals_0['living_area'] + self.property_vals_0['garden_area'],
-            'best_offer_price':self.offer_vals_0["price"]
+            'best_offer_price':self.offer_vals_1["price"]
         }
         self.assertRecordValues(self.properties_0,[
             {**self.property_vals_0, **default_values, **computed_values}
@@ -134,7 +141,11 @@ class EstateTestCase(TransactionCase):
         with self.assertRaises(UserError):
             # test action cancel with solded property
             self.properties_3.action_cancel()
+
     def test_action_accept_offer(self):
+        with self.assertRaises(ValidationError):
+            self.assertFalse(self.estate_offer_2.state)
+            self.estate_offer_2.action_accept_offer()
         self.assertFalse(self.estate_offer_1.state)
         self.estate_offer_1.action_accept_offer()
         self.assertRecordValues(self.estate_offer_1,[{'state':'accepted'}])
