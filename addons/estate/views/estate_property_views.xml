@@ -13,7 +13,7 @@
         <tree>
             <field name="name" string="Title"/>
             <field name="property_type_id" />
-            <field name="tag_ids" widget="many2many_tags"/>
+            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             <field name="postcode"/>
             <field name="bedrooms"/>
             <field name="living_area"/>
@@ -39,7 +39,7 @@
               <h1 class="mb32">
                 <field name="name"/>
               </h1>
-              <field name="tag_ids" widget="many2many_tags"/>
+              <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
               <group>
                   <group>
                     <group>
