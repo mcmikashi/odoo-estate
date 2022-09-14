@@ -5,4 +5,27 @@
     <field name="res_model">estate.property.type</field>
     <field name="view_mode">tree,form</field>
   </record>
+
+  <record id="estate_property_type_form_view" model="ir.ui.view">
+    <field name="name">estate.property.type.form</field>
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <field name="name"/>
+            <notebook>
+              <page string="Properties">
+               <field name="property_ids">
+                  <tree>
+                    <field name="name" string="TItle"/>
+                    <field name="expected_price"/>
+                    <field name="state"/>
+                  </tree>
+               </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+    </field>
+  </record>
 </odoo>
