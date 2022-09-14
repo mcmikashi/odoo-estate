@@ -31,8 +31,9 @@
     <field name="arch" type="xml">
       <form>
           <header>
-            <button name="action_sell" type="object" string="Sell"/>
-            <button name="action_cancel" type="object" string="Cancel"/>
+            <button name="action_sell" type="object" string="Sell" states="new,offer received"/>
+            <button name="action_sell" type="object" string="Sell" states="offer accepted" class="oe_highlight"/>
+            <button name="action_cancel" type="object" string="Cancel" states="new,offer received,offer accepted"/>
             <field name="state" widget="statusbar" statusbar_visible="new,offer received,offer accepted,sold"/>
           </header>
           <sheet>
