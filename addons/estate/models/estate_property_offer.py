@@ -3,7 +3,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 
-
 class EstatePropertyType(models.Model):
     _name = "estate.property.offer"
     _description = "Real estate property type"
@@ -34,8 +33,8 @@ class EstatePropertyType(models.Model):
 
     def _inverse_date_deadline(self):
         for record in self:
-            if fields.Date.add(record.create_date + record.validity) != record.date_deadline:
-                validity = record.date_deadline - record.create_date 
+            if fields.Date.add(record.create_date, days=record.validity) != record.date_deadline:
+                validity = record.date_deadline - record.create_date.date()
                 record.validity = validity.days
     
     def action_accept_offer(self):
@@ -51,5 +50,4 @@ class EstatePropertyType(models.Model):
     
     def action_refuse_offer(self):
             return self.write({'state':'refused'})
-                
-    
+ 
