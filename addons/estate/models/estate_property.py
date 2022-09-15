@@ -94,3 +94,8 @@ class Estate(models.Model):
             if record.state == "sold":
                 raise UserError("You can't cancel a property that is already sold.")
         return self.write({"state": "canceled"})
+    
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_bad_state(self):
+        if any(properties.state in {"new","canceled"} for properties in self):
+            raise UserError("Can't delete an active properties")
