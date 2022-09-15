@@ -52,3 +52,13 @@ class EstatePropertyType(models.Model):
     def action_refuse_offer(self):
             return self.write({'state':'refused'})
  
+    @api.model
+    def create(self, vals):
+        offers = self.env['estate.property'].browse(vals['property_id'])
+        if len(offers.offer_ids) != 0:
+            mininum_price = min(offers.offer_ids.mapped("price"))
+            if mininum_price >= vals["price"]:
+                raise UserError("You can't add a lower offers price.")
+        if offers.state == 'new':
+            offers.write({'state':'offer received'})
+        return super().create(vals)
