@@ -10,10 +10,10 @@
     <field name="name">estate.property.type.tree</field>
     <field name="model">estate.property.type</field>
     <field name="arch" type="xml">
-        <tree>
-            <field name="sequence" widget="handle"/>
-            <field name="name"/>
-        </tree>
+      <tree>
+        <field name="sequence" widget="handle"/>
+        <field name="name"/>
+      </tree>
     </field>
   </record>
 
@@ -21,27 +21,27 @@
     <field name="name">estate.property.type.form</field>
     <field name="model">estate.property.type</field>
     <field name="arch" type="xml">
-        <form>
-          <sheet>
-            <div class="oe_button_box" name="button_box">
-              <button name="%(estate.estate_property_offer)d" type="action" class="oe_stat_button" icon="fa-money">
-                <field name="offer_count" widget="statinfo" string="Offers"/>
-              </button>
-            </div>
-            <field name="name"/>
-            <notebook>
-              <page string="Properties">
-               <field name="property_ids">
-                  <tree>
-                    <field name="name" string="TItle"/>
-                    <field name="expected_price"/>
-                    <field name="state"/>
-                  </tree>
-               </field>
-              </page>
-            </notebook>
-          </sheet>
-        </form>
+      <form>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="%(estate.estate_property_offer)d" type="action" class="oe_stat_button" icon="fa-money">
+              <field name="offer_count" widget="statinfo" string="Offers"/>
+            </button>
+          </div>
+          <field name="name"/>
+          <notebook>
+            <page string="Properties">
+              <field name="property_ids">
+                <tree>
+                  <field name="name" string="TItle"/>
+                  <field name="expected_price"/>
+                  <field name="state"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
     </field>
   </record>
 

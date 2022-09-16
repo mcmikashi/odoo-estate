@@ -2,14 +2,8 @@
     <menuitem id="estate_menu_root" name="Real Estate">
         <menuitem id="estate_advertisement_menu" name="Properties" action="estate_property"/>
         <menuitem id="setting_name_menu" name="Settings">
-            <menuitem
-                id="estate_property_type_menu"
-                name="Type"
-                action="estate_property_type"/>
-            <menuitem
-                id="estate_property_tags_menu"
-                name="Tags"
-                action="estate_property_tags"/>
+            <menuitem id="estate_property_type_menu" name="Type" action="estate_property_type"/>
+            <menuitem id="estate_property_tags_menu" name="Tags" action="estate_property_tags"/>
         </menuitem>
     </menuitem>
 </odoo>

@@ -5,14 +5,14 @@
     <field name="res_model">estate.property.tags</field>
     <field name="view_mode">tree,form</field>
   </record>
-  
+
   <record id="estate_property_tags_tree_view" model="ir.ui.view">
     <field name="name">estate.property.tags.tree</field>
     <field name="model">estate.property.tags</field>
     <field name="arch" type="xml">
-        <tree editable="bottom">
-            <field name="name"/>
-        </tree>
+      <tree editable="bottom">
+        <field name="name"/>
+      </tree>
     </field>
   </record>
 
