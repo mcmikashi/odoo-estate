@@ -3,7 +3,7 @@
   <record model="ir.actions.act_window" id="estate_property">
     <field name="name">Real estate</field>
     <field name="res_model">estate.property</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">tree,form,kanban</field>
     <field name="context">{'search_default_available': True}</field>
   </record>
 
@@ -106,6 +106,36 @@
           <filter string="Postcode" name="postcode" context="{'group_by':'postcode'}"/>
         </group>
       </search>
+    </field>
+  </record>
+  <record id="estate_property_view_kaban" model="ir.ui.view">
+    <field name="name">estate.property.kanban</field>
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+      <kanban default_group_by="property_type_id">
+        <field name="state"/>
+        <templates>
+          <t t-name="kanban-box">
+            <div class="oe_kanban_global_click">
+              <h1>
+                <field name="name"/>
+              </h1>
+              <div>
+                        Exepted price : <field name="expected_price"/>
+              </div>
+              <div t-if="record.state == 'offer received'">
+                        Best price :<field name="best_offer_price"/>
+              </div>
+              <div t-if="record.state == 'offer accepted'">
+                        Selling price :<field name="selling_price"/>
+              </div>
+              <div>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+              </div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
     </field>
   </record>
 </odoo>
